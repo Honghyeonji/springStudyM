@@ -1,0 +1,9 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <p th:text="'hello ' + ${name}">hello! empty</p>
+<!-- 어차피 hello name으로 뜰건데 굳이 hello! empty 라는 문구를 넣는 이유는
+파일 우클릭->copy->absolute path 해서 주소를 웹에서 검색해보면
+굳이 서버를 돌려서 확인하지 않아도 html이 어떻게 작동되는지 확인할 수 있음
+그 확인 용으로 hello! empty라는 문구를 넣은 것-->
+    </body>
+</html>
