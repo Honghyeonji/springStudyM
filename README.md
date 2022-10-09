@@ -115,6 +115,7 @@ static폴더가 있는데 그 폴더에다가 만들면 된다. (public, resourc
 index.html파일을 만들어보기도 했고 api를 주로 쓸거라서 굳이 실습까지 따라해 볼 필요는 없다고 생각해 실습은 안 했다.
 
 이런식으로 작동된다.
+
 ![캡처_2022_10_09_19_43_23_699](https://user-images.githubusercontent.com/66579773/194756883-0563714b-3373-42cb-980e-6bdff3a698ee.png)
 
 
@@ -143,6 +144,7 @@ public String helloMvc(@RequestParam(value="name",required = false) String name,
 뜨게 해주려면 RequestParam()안에 value = "name", required = false 이렇게 코드를 추가해주면 된다.
 
 작동원리는 이렇다.
+
 ![캡처_2022_10_09_19_43_31_694](https://user-images.githubusercontent.com/66579773/194757130-51996a4d-b716-4ddb-a7a4-82c2afc004e6.png)
 
 
@@ -164,9 +166,11 @@ public String helloString(@RequestParam("name") String name) {
 서버 경로로 /hello-stirng?name=spring을 써주면 웹브라우저는 똑같이 hello spring으로 나오지만
 
 **/hello-mvc?name=spring 페이지 소스**
+
 ![캡처_2022_10_09_21_16_18_694](https://user-images.githubusercontent.com/66579773/194757284-17b1bab1-63e0-4eee-ada0-d4d754096f26.png)
 
 **/hello-string?name=spring 페이지 소스**
+
 ![캡처_2022_10_09_21_16_30_135](https://user-images.githubusercontent.com/66579773/194757340-c284e161-e4ce-4ea7-85b6-af8180b7b93d.png)
 
 이렇게 페이지 소스보기로 코드를 확인해보면 html코드로 돌아가는 게 아니라는 걸 알 수 있다.
@@ -194,11 +198,15 @@ public String helloString(@RequestParam("name") String name) {
 이 코드에서는 Hello라는 객체를 만들어서 그 안의 name이라는 변수에 name이라는 파라미터를 받아 넣어주고 Hello객체를 반환시켜 준다.
 
 이 코드로 서버를 돌려 서버 경로로 hello-api?name=spring을 써주면 이렇게 뜬다.
+
 ![캡처_2022_10_09_21_22_21_312](https://user-images.githubusercontent.com/66579773/194757443-e61128fc-12ab-465e-bb66-9cc510d339c2.png)
+
 문자 형태로 반환해준 게 아니라 json 객체 형태로 반환해줬기 때문에 name이라는 데이터 이름과 내용이 보이는 것이다.
 
 정리하자면 작동원리는 이렇고
+
 ![캡처_2022_10_09_19_43_40_923](https://user-images.githubusercontent.com/66579773/194757452-ede50d6b-f181-4323-8c1d-9ca280123597.png)
+
 @ResponseBody를 사용하면
 + HTTP의 바디에 문자 내용이나, data를 직접 반환해준다.
 + viewResolver 대신에 HttpMessageConverter이 동작한다.
