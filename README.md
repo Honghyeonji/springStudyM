@@ -100,3 +100,108 @@ th:text= 로 이미 안녕하세요 data를 써줬기 때문에 안녕하세요.
 회의도 있고, 생각보다 노트북으로 설정하는 것이 오래 걸려서 많은 진도를 못나갔다.
 다음번에는 스프링 DB 접근 기술의 반까지 나가는 것이 목표이다.
 
+
+-------------------------
+### 2주차 목표
+--------------------------
++ 인프런 강의 중 스프링 웹 개발 기초 공부
+--------------------------
+### 2주차 활동
+--------------------------
+### 정적 컨텐츠
+springboot에서 정적 컨텐츠란 앞서 단순한 index.html 파일을 만든 것 처럼 html파일 코드를 직접 짜서 스프링 웹 브라우저를 구축하는 것이 정적컨텐츠이다.
+springboot는 정적 컨텐츠 기능을 기본으로 제공해준다.
+static폴더가 있는데 그 폴더에다가 만들면 된다. (public, resources 폴더도 가능)
+index.html파일을 만들어보기도 했고 api를 주로 쓸거라서 굳이 실습까지 따라해 볼 필요는 없다고 생각해 실습은 안 했다.
+
+이런식으로 작동된다.
+![캡처_2022_10_09_19_43_23_699](https://user-images.githubusercontent.com/66579773/194756883-0563714b-3373-42cb-980e-6bdff3a698ee.png)
+
+
+### MVC와 템플릿 엔진
+MVC와 템플릿 엔진은 소위 jsp,csp코드를 짜서 html 동적이게 구축하는 동적컨텐츠이다.
+MVC는 Model, View, Controller를 뜻한다.
+
+과거에는 view와 controller가 분리되어있지 않았는데 view에서 모든 걸 다 했는데(model1방식) 현재에는 MVC을 나눠서 개발한다.
+현재 방식에서 view는 단순히 웹브라우저 화면을 그리는 용도로 사용된다.
+controller랑 model은 비즈니스 로직이나 내부처리에 집중된다.
+
+이 파트 실습에서는 controller와 view 코드를 새로 짰다.
+controller는 이전에 hellocontroller코드에서 추가해주었다.
+``` Java
+@GetMapping("hello-mvc")
+public String helloMvc(@RequestParam(value="name",required = false) String name, Model model) {
+    model.addAttribute("name", name);
+    return "hello-template";
+}
+```
+이 코드에서 RequestParam는 외부에서 name파라미터를 가져온다는 뜻이다. 서버 경로에다가 name=(단어)를 써주면 되는 것이다.
+
+서버를 돌리고 로컬호스트 경로에다가 /hello-mvc?name=spring 를 추가해서 써주면 hello! spring 이라고 뜬다.
+
+만약 hello-mvc만 쓰면 name 파라미터를 안 넣어줘서 에러가 뜬다.
+뜨게 해주려면 RequestParam()안에 value = "name", required = false 이렇게 코드를 추가해주면 된다.
+
+작동원리는 이렇다.
+![캡처_2022_10_09_19_43_31_694](https://user-images.githubusercontent.com/66579773/194757130-51996a4d-b716-4ddb-a7a4-82c2afc004e6.png)
+
+
+### API
+json이라는 데이터 구조 포맷으로 클라이언트에게 데이터를 전달해준다. (서버끼리 통신할 때 씀)
+api와 mvc를 구분하는 방식은 템플릿을 html로 내려 화면으로 보이게 해주는 가, 아니면 api방식으로 데이터를 바로 내리는 가 이다.
+
+아무튼 서버 경로를 만들어서 호출하고 작동하는 건 똑같기 때문에 hellocontroller안에 코드를 또 추가해주었다.
+``` Java
+@GetMapping("hello-string")
+@ResponseBody
+public String helloString(@RequestParam("name") String name) {
+    return "hello " + name;
+}
+```
+@ResponseBody의 의미는 http 통신 프로토콜의 응답 바디부에 helloString이라는 데이터를 직접 넣어주겠다는 뜻이다.
+그래서 viewResolver가 없어서 view를 안써줘도 된다.
+
+서버 경로로 /hello-stirng?name=spring을 써주면 웹브라우저는 똑같이 hello spring으로 나오지만
+
+**/hello-mvc?name=spring 페이지 소스**
+![캡처_2022_10_09_21_16_18_694](https://user-images.githubusercontent.com/66579773/194757284-17b1bab1-63e0-4eee-ada0-d4d754096f26.png)
+
+**/hello-string?name=spring 페이지 소스**
+![캡처_2022_10_09_21_16_30_135](https://user-images.githubusercontent.com/66579773/194757340-c284e161-e4ce-4ea7-85b6-af8180b7b93d.png)
+
+이렇게 페이지 소스보기로 코드를 확인해보면 html코드로 돌아가는 게 아니라는 걸 알 수 있다.
+
+하지만 위 코드는 문자를 보여주는 코드이다. 만약 데이터를 보여주고 싶은 코드라면 json형태로 객체를 반환시켜 보여줘야하지 않나
+똑같이 hellocontroller에다가 코드를 추가해준다.
+``` Java
+    @GetMapping("hello-api")
+    @ResponseBody
+    public Hello helloApi(@RequestParam("name") String name) {
+        Hello hello = new Hello();
+        hello.setName(name);
+        return hello;
+    }
+    static class Hello {
+        private String name;
+        public String getName() {
+            return name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+```
+이 코드에서는 Hello라는 객체를 만들어서 그 안의 name이라는 변수에 name이라는 파라미터를 받아 넣어주고 Hello객체를 반환시켜 준다.
+
+이 코드로 서버를 돌려 서버 경로로 hello-api?name=spring을 써주면 이렇게 뜬다.
+![캡처_2022_10_09_21_22_21_312](https://user-images.githubusercontent.com/66579773/194757443-e61128fc-12ab-465e-bb66-9cc510d339c2.png)
+문자 형태로 반환해준 게 아니라 json 객체 형태로 반환해줬기 때문에 name이라는 데이터 이름과 내용이 보이는 것이다.
+
+정리하자면 작동원리는 이렇고
+![캡처_2022_10_09_19_43_40_923](https://user-images.githubusercontent.com/66579773/194757452-ede50d6b-f181-4323-8c1d-9ca280123597.png)
+@ResponseBody를 사용하면
++ HTTP의 바디에 문자 내용이나, data를 직접 반환해준다.
++ viewResolver 대신에 HttpMessageConverter이 동작한다.
++ 문자처리는 StringHttpMessageConverter가 객체처리는 MappingJackson2HttpMessageConverter가 동작한다.
++ 이외의 다른 처리도 HttpMessageConverter로 기본으로 등록되어 있다.
+
